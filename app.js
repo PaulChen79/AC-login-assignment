@@ -22,11 +22,15 @@ app.use((req, res, next) => {
 })
 
 app.get('/', (req, res) => {
-  res.render('login')
+  if (req.session.login) {
+    return res.render('success')
+  }
+  req.flash('warning_msg', 'You have to login first')
+  res.redirect('/login')
 })
 
-app.get('/welcome', (req, res) => {
-  res.render('success')
+app.get('/login', (req, res) => {
+  res.render('login')
 })
 
 app.post('/login', (req, res) => {
@@ -42,7 +46,8 @@ app.post('/login', (req, res) => {
     res.redirect('back')
     return
   }
-  res.redirect('/welcome')
+  req.session.login = true
+  res.redirect('/')
 })
 
 
